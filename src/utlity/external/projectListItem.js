@@ -3,13 +3,21 @@ import { BsBoxArrowUpRight } from "react-icons/bs";
 import { GiGiftOfKnowledge } from "react-icons/gi";
 import ConfirmModal from "../Additional/ConfirmModel";
 import ProfileModal from "../Additional/ProfileModal";
+import ProjectData from "../ProjectDetails";
+import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const ProjectListItem = ({ project }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState();
-  console.log(showProfileModal)
-  const handleOpen = () => setShowConfirmModal(true);
+  const [RealId, setRealId] = useState()
+  const navigate = useNavigate();
+  let Data=ProjectData.map((jet)=>jet.Cards)
+  const handleOpen = (id) => {
+      setRealId(Data[id])
+      setShowConfirmModal(true)
+      };
   const hideConfirmModal = () => setShowConfirmModal(false);
    const hideProfileModal = () => {
     setShowProfileModal(false);
@@ -17,6 +25,13 @@ const ProjectListItem = ({ project }) => {
   const handleProjectfile = (id) => {
     setSelectedProfile(id);
     setShowProfileModal(true);
+
+  };
+  const handleRedirect = () => {
+    const Redirect = RealId.projectLink;
+    window.location.href = `${Redirect}`;
+    console.log(Redirect)
+    
   };
   return (
     <>
@@ -29,6 +44,7 @@ const ProjectListItem = ({ project }) => {
         <ConfirmModal
           visible={showConfirmModal}
           onCancel={hideConfirmModal}
+          onConfirm={handleRedirect}
           
           title="Are you sure?"
           subtitle="You will be redirected to the External Link"
@@ -81,7 +97,7 @@ const ProjectCard = ({project, onOpenClick ,handleProjectfile}) => {
           </td>
           <td>
             <div className="items-center justify-around space-x-3  text-primary text-lg">             
-              <button  onClick={onOpenClick} type="button">
+              <button  onClick={()=>onOpenClick(id)} type="button">
                 <BsBoxArrowUpRight className="text-black" />    
               </button>
               <button onClick={()=>handleProjectfile(id)} type="button">
